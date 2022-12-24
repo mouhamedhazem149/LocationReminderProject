@@ -1,0 +1,47 @@
+<resources>
+
+<!--    &lt;!&ndash; Base application theme. &ndash;&gt;-->
+<!--    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">-->
+<!--        &lt;!&ndash; Customize your theme here. &ndash;&gt;-->
+<!--        <item name="colorPrimary">@color/colorPrimary</item>-->
+<!--        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>-->
+<!--        <item name="colorAccent">@color/colorAccent</item>-->
+<!--    </style>-->
+
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">@color/primaryColor</item>
+        <item name="colorPrimaryVariant">@color/primaryDarkColor</item>
+       <item name="colorOnPrimary">@color/primaryTextColor</item>
+        <item name="android:fontFamily">@font/cairo_semibold</item>
+        <item name="fontFamily">@font/cairo_semibold</item>
+    </style>
+
+    <style name="lightStyle" parent="Theme.MaterialComponents.Light.DarkActionBar">
+        <item name="colorPrimary">@color/secondaryColor</item>
+        <item name="colorPrimaryVariant">@color/secondaryDarkColor</item>
+        <item name="colorOnPrimary">@color/secondaryTextColor</item>
+        <item name="android:fontFamily">@font/cairo_semibold</item>
+        <item name="fontFamily">@font/cairo_semibold</item>
+    </style>
+
+    <style name="buttonStyle" parent="Widget.MaterialComponents.Button">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10dp</item>
+    </style>
+
+    <style name="subTitleHeadline" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_margin">32dp</item>
+    </style>
+
+    <style name="labelStyle" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/primaryLightColor</item>
+    </style>
+
+    <style name="contentStyle" parent="TextAppearance.MaterialComponents.Headline5">
+        <item name="android:textSize">18sp</item>
+    </style>
+
+</resources>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <SeekBarPreference
+        android:key="@string/radius_settings"
+        android:title="@string/radius_settings_title"
+        android:defaultValue="100"
+        android:max="10000"
+        app:useSimpleSummaryProvider="true"
+        android:summary="@string/radius_settings_format"
+        app:showSeekBarValue="true"/>
+
+</PreferenceScreen>
