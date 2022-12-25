@@ -19,6 +19,8 @@ import org.jetbrains.annotations.TestOnly
  */
 class RemindersActivity : AppCompatActivity() {
 
+    private var isInitialized = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -42,9 +44,12 @@ class RemindersActivity : AppCompatActivity() {
             // new one and to prevent navigating back to this activity
             finish()
             return false
-        }else {
+        } else {
             // else if authed then continue launching reminders activity
-            setContentView(R.layout.activity_reminders)
+            if (!isInitialized) {
+                setContentView(R.layout.activity_reminders)
+                isInitialized = true
+            }
             return true
         }
     }

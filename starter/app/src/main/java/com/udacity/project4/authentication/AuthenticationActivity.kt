@@ -21,6 +21,7 @@ class AuthenticationActivity : AppCompatActivity() {
     companion object {
         const val  SIGN_IN_REQUEST_CODE = 1001
     }
+    private var isInitialized = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,7 +38,10 @@ class AuthenticationActivity : AppCompatActivity() {
         // if Not authenticated then continue launching auth activity
         if (authState != AuthenticationState.AUTHENTICATED) {
 
-            setContentView(R.layout.activity_authentication)
+            if (!isInitialized) {
+                setContentView(R.layout.activity_authentication)
+                isInitialized =true
+            }
 
 //          TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
             login_button.setOnClickListener {

@@ -7,7 +7,7 @@
         android:key="@string/radius_settings"
         android:title="@string/radius_settings_title"
         android:defaultValue="100"
-        android:max="10000"
+        android:max="3000"
         app:useSimpleSummaryProvider="true"
         android:summary="@string/radius_settings_format"
         app:showSeekBarValue="true"/>
