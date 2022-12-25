@@ -1,14 +1,14 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.platform.app.InstrumentationRegistry
+import com.udacity.project4.MyApp
 import com.udacity.project4.R
-import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.FakeDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
 import org.hamcrest.CoreMatchers
 import org.hamcrest.MatcherAssert.assertThat
 import org.hamcrest.Matchers.`is`
@@ -17,7 +17,6 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.core.context.stopKoin
-import org.robolectric.RuntimeEnvironment
 
 @ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
@@ -31,7 +30,7 @@ class SaveReminderViewModelTest {
     @Before
     fun setupViewModel() {
         fakeDatasource = FakeDataSource()
-        saveReminderViewModel = SaveReminderViewModel(RuntimeEnvironment.application, fakeDatasource)
+        saveReminderViewModel = SaveReminderViewModel(MyApp(), fakeDatasource)
     }
 
     @After
@@ -41,7 +40,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun validReminderSaveCurrentReminderSuccess() {
+    fun validReminderSaveCurrentReminderSuccess() = runBlockingTest {
         //Given
         saveReminderViewModel.reminderTitle.value = "testTitle"
         saveReminderViewModel.reminderDescription.value = "testDescription"
@@ -74,19 +73,10 @@ class SaveReminderViewModelTest {
             assertThat(dbItem.longitude, `is`(saveResult.longitude))
             assertThat(dbItem.location, `is`(saveResult.location))
         }
-
-        assertThat(saveReminderViewModel.showLoading.value,
-            `is`(false))
-
-        assertThat(
-            saveReminderViewModel.showToast.value,
-            `is`(InstrumentationRegistry.getInstrumentation().getTargetContext().getString(R.string.reminder_saved))
-        )
-
     }
 
     @Test
-    fun nullTitleSaveCurrentReminderNullSaveResult() {
+    fun nullTitleSaveCurrentReminderNullSaveResult() = runBlockingTest {
         //Given
         saveReminderViewModel.reminderTitle.value = null
         saveReminderViewModel.reminderDescription.value = "testDescription"
@@ -108,7 +98,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun nullLocationSaveCurrentReminderNullSaveResult(){
+    fun nullLocationSaveCurrentReminderNullSaveResult() = runBlockingTest{
         //Given
         saveReminderViewModel.reminderTitle.value = "testTitle"
         saveReminderViewModel.reminderDescription.value = "testDescription"
@@ -130,7 +120,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun dbErrorSaveCurrentReminderNullSaveResult(){
+    fun dbErrorSaveCurrentReminderNullSaveResult() = runBlockingTest{
         //Given
         saveReminderViewModel.reminderTitle.value = "testTitle"
         saveReminderViewModel.reminderDescription.value = "testDescription"
@@ -150,7 +140,7 @@ class SaveReminderViewModelTest {
     }
 
     @Test
-    fun onClearTest(){
+    fun onClearTestAllValuesNull(){
         //
 
         //When viewModel Cleared

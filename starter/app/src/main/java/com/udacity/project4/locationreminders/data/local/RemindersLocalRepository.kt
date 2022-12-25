@@ -36,9 +36,14 @@ class RemindersLocalRepository(
      * Insert a reminder in the db.
      * @param reminder the reminder to be inserted
      */
-    override suspend fun saveReminder(reminder: ReminderDTO) =
+    override suspend fun saveReminder(reminder: ReminderDTO) : Result<ReminderDTO> =
         withContext(ioDispatcher) {
-            remindersDao.saveReminder(reminder)
+            try {
+                remindersDao.saveReminder(reminder)
+                return@withContext Result.Success(reminder)
+            } catch (ex: Exception) {
+                return@withContext Result.Error(ex.message)
+            }
         }
 
     /**

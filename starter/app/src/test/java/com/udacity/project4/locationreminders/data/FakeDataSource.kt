@@ -3,7 +3,6 @@ package com.udacity.project4.locationreminders.data
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.data.dto.Result.*
-import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 
 //Use FakeDataSource that acts as a test double to the LocalDataSource
 class FakeDataSource(val reminders : MutableList<ReminderDTO> = mutableListOf()) : ReminderDataSource {
@@ -26,8 +25,13 @@ class FakeDataSource(val reminders : MutableList<ReminderDTO> = mutableListOf())
        // TODO("Return the reminders")
     }
 
-    override suspend fun saveReminder(reminder: ReminderDTO) {
-        reminders.add(reminder)
+    override suspend fun saveReminder(reminder: ReminderDTO) : Result<ReminderDTO> {
+        if (shouldReturnError){
+            return Result.Error("failed to save reminder")
+        } else {
+            reminders.add(reminder)
+            return Success(reminder)
+        }
         //TODO("save the reminder")
     }
 
@@ -48,8 +52,12 @@ class FakeDataSource(val reminders : MutableList<ReminderDTO> = mutableListOf())
     }
 
     override suspend fun deleteAllReminders() {
-        reminders.clear()
-        //TODO("delete all the reminders")
+        if (shouldReturnError) {
+            throw Exception("Failed to save reminder")
+        } else {
+            reminders.clear()
+            //TODO("delete all the reminders")
+        }
     }
 
 }

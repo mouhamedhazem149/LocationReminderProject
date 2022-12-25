@@ -10,17 +10,18 @@ import com.udacity.project4.base.BaseViewModel
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
+import com.udacity.project4.locationreminders.data.dto.Result
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
-    val reminderTitle = MutableLiveData<String>()
-    val reminderDescription = MutableLiveData<String>()
-    val reminderSelectedLocationStr = MutableLiveData<String>()
-    val selectedPOI = MutableLiveData<PointOfInterest>()
-    val latitude = MutableLiveData<Double>()
-    val longitude = MutableLiveData<Double>()
+    val reminderTitle = MutableLiveData<String?>()
+    val reminderDescription = MutableLiveData<String?>()
+    val reminderSelectedLocationStr = MutableLiveData<String?>()
+    val selectedPOI = MutableLiveData<PointOfInterest?>()
+    val latitude = MutableLiveData<Double?>()
+    val longitude = MutableLiveData<Double?>()
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
@@ -39,7 +40,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
      */
 
     fun SaveCurrentReminder() : ReminderDataItem? {
-        Log.i("Reminders TAG","start Saving Reminder")
+        Log.i("Reminders TAG", "start Saving Reminder")
         val reminderItem = ReminderDataItem(
             reminderTitle.value,
             reminderDescription.value,
@@ -49,17 +50,18 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         )
 
         if (validateEnteredData(reminderItem)) {
-            try {
-                Log.i("Reminders TAG","start Saving Reminder")
-                saveReminder(reminderItem)
-                Log.i("Reminders TAG","Reminder Saved")
-                return reminderItem
-            } catch (ex: java.lang.Exception) {
-                return null
+            saveReminder(reminderItem).let {
+                if (it is Result.Error) {
+                    val fail = it
+                    fail.message?.let {
+                        return null
+                    }
+                } else {
+                    return reminderItem
+                }
             }
-        } else {
-            return null
         }
+        return null
     }
 
     /**
@@ -74,10 +76,15 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Save the reminder to the data source
      */
-    fun saveReminder(reminderData: ReminderDataItem) {
+    fun saveReminder(reminderData: ReminderDataItem) : Result<ReminderDTO> {
+
         showLoading.value = true
+
+        var result: Result<ReminderDTO> =
+            Result.Error("Reminder Item not initialized")
+
         viewModelScope.launch {
-            dataSource.saveReminder(
+            result = dataSource.saveReminder(
                 ReminderDTO(
                     reminderData.title,
                     reminderData.description,
@@ -91,6 +98,7 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
             showToast.value = app.getString(R.string.reminder_saved)
             navigationCommand.value = NavigationCommand.Back
         }
+        return result
     }
 
     /**

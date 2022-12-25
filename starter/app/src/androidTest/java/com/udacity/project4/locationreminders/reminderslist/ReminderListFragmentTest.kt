@@ -14,9 +14,11 @@ import androidx.test.platform.app.InstrumentationRegistry
 import com.udacity.project4.R
 import kotlinx.android.synthetic.main.fragment_reminders.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.*
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers
 import org.mockito.Mockito.*
 
 @RunWith(AndroidJUnit4::class)
@@ -32,11 +34,11 @@ class ReminderListFragmentTest {
 //    TODO: add testing for the error messages.
 
     @Test
-    fun onReminderListFragmentHome_DisplayedInUi() {
+    fun onReminderListFragmentHome_DisplayedInUi() = runBlockingTest {
         // GIVEN - On the home screen
         val scenario = launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
 
-        var reminders : RemindersListAdapter
+        var reminders: RemindersListAdapter
 
         scenario.onFragment { fragment ->
             var permissionGranted = fragment.isPermissionGranted()
