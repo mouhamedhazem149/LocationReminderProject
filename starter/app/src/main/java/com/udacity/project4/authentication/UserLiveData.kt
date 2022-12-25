@@ -24,7 +24,7 @@ enum class AuthenticationState {
     AUTHENTICATED, UNAUTHENTICATED
 }
 
-class FirebaseUserLiveData : LiveData<AuthenticationState>() {
+class UserLiveData : LiveData<AuthenticationState>() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()
 

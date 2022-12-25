@@ -93,11 +93,10 @@ class RemindersActivityTest :
             repository.deleteAllReminders()
         }
     }
-
 //    TODO: add End to End testing to the app
 
     @Test
-    fun saveOneReminder() = runBlocking {
+    fun saveOneReminder() = runBlocking{
 
         // start up Tasks screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)

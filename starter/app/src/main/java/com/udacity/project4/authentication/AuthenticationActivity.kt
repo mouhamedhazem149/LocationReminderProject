@@ -4,12 +4,13 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthMethodPickerLayout
 import com.firebase.ui.auth.AuthUI
-import com.google.firebase.auth.FirebaseAuth
 import com.udacity.project4.R
 import com.udacity.project4.locationreminders.RemindersActivity
 import kotlinx.android.synthetic.main.activity_authentication.*
+import org.jetbrains.annotations.TestOnly
 
 /**
  * This class should be the starting point of the app, It asks the users to sign in / register, and redirects the
@@ -23,17 +24,37 @@ class AuthenticationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_authentication)
 
 //         TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
-        login_button.setOnClickListener {
-            startSignInFlow()
-        }
+//         TODO: If the user was authenticated, send him to RemindersActivity
+        UserLiveData().observe(this, Observer {
+            checkAuth(it)
+        })
+    }
 
+    @TestOnly
+    private fun checkAuth(authState : AuthenticationState?) : Boolean {
+        // if Not authenticated then continue launching auth activity
+        if (authState != AuthenticationState.AUTHENTICATED) {
+
+            setContentView(R.layout.activity_authentication)
+
+//          TODO: Implement the create account and sign in using FirebaseUI, use sign in using email and sign in using Google
+            login_button.setOnClickListener {
+                startSignInFlow()
+            }
+
+            return false
+        } else {
+            // else if authed then launch the reminder activity
 //          TODO: If the user was authenticated, send him to RemindersActivity
-        FirebaseAuth.getInstance().currentUser?.let {
             startActivity(Intent(this, RemindersActivity::class.java))
+
+            // used to prevent kind of bleeding of the activity bfr launching the
+            // new one and to prevent navigating back to this activity
             finish()
+
+            return true
         }
     }
 
@@ -56,10 +77,9 @@ class AuthenticationActivity : AppCompatActivity() {
         startActivityForResult(
             AuthUI.getInstance()
                 .createSignInIntentBuilder()
-                //.setLogo(R.drawable.map)
-                //.setIsSmartLockEnabled(false)
-                .setAuthMethodPickerLayout(customLayout)
                 .setAvailableProviders(providers)
+                //.setLogo(R.drawable.map)
+                .setAuthMethodPickerLayout(customLayout)
                 .setTheme(R.style.AppTheme)
                 .build(),
             SIGN_IN_REQUEST_CODE
@@ -68,12 +88,13 @@ class AuthenticationActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
 
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == SIGN_IN_REQUEST_CODE) {
             if (resultCode == Activity.RESULT_OK) {
                 startActivity(Intent(this, RemindersActivity::class.java))
             }
         }
 
-        super.onActivityResult(requestCode, resultCode, data)
     }
 }
