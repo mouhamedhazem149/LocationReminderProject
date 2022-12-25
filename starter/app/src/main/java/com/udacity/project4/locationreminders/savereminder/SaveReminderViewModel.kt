@@ -40,7 +40,6 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
      */
 
     fun SaveCurrentReminder() : ReminderDataItem? {
-        Log.i("Reminders TAG", "start Saving Reminder")
         val reminderItem = ReminderDataItem(
             reminderTitle.value,
             reminderDescription.value,
@@ -50,15 +49,11 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
         )
 
         if (validateEnteredData(reminderItem)) {
-            saveReminder(reminderItem).let {
-                if (it is Result.Error) {
-                    val fail = it
-                    fail.message?.let {
-                        return null
-                    }
-                } else {
-                    return reminderItem
-                }
+            try {
+                saveReminder(reminderItem)
+                return reminderItem
+            } catch (ex: Exception) {
+                return null
             }
         }
         return null
@@ -76,29 +71,28 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
     /**
      * Save the reminder to the data source
      */
-    fun saveReminder(reminderData: ReminderDataItem) : Result<ReminderDTO> {
-
+    fun saveReminder(reminderData: ReminderDataItem) {
         showLoading.value = true
 
-        var result: Result<ReminderDTO> =
-            Result.Error("Reminder Item not initialized")
-
         viewModelScope.launch {
-            result = dataSource.saveReminder(
-                ReminderDTO(
-                    reminderData.title,
-                    reminderData.description,
-                    reminderData.location,
-                    reminderData.latitude,
-                    reminderData.longitude,
-                    reminderData.id
+            try {
+                dataSource.saveReminder(
+                    ReminderDTO(
+                        reminderData.title,
+                        reminderData.description,
+                        reminderData.location,
+                        reminderData.latitude,
+                        reminderData.longitude,
+                        reminderData.id
+                    )
                 )
-            )
-            showLoading.value = false
-            showToast.value = app.getString(R.string.reminder_saved)
-            navigationCommand.value = NavigationCommand.Back
+                showLoading.value = false
+                showToast.value = app.getString(R.string.reminder_saved)
+                navigationCommand.value = NavigationCommand.Back
+            } catch (ex: Exception) {
+
+            }
         }
-        return result
     }
 
     /**

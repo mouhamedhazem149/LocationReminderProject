@@ -2,6 +2,7 @@ package com.udacity.project4.locationreminders
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +33,7 @@ class RemindersActivity : AppCompatActivity() {
     @TestOnly
     private fun checkAuth(authState : AuthenticationState?) : Boolean {
         // if not authenticated then launch authentication activity
+
         if (authState != AuthenticationState.AUTHENTICATED) {
             startActivity(
                 Intent(

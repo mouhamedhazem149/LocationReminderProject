@@ -119,25 +119,25 @@ class SaveReminderViewModelTest {
         )
     }
 
-    @Test
-    fun dbErrorSaveCurrentReminderNullSaveResult() = runBlockingTest{
-        //Given
-        saveReminderViewModel.reminderTitle.value = "testTitle"
-        saveReminderViewModel.reminderDescription.value = "testDescription"
-        saveReminderViewModel.reminderSelectedLocationStr.value = "testLocation"
-        saveReminderViewModel.latitude.value = 1.0
-        saveReminderViewModel.longitude.value = 1.0
-
-        fakeDatasource.setReturnError(true)
-
-        //When
-
-        val saveResult = saveReminderViewModel.SaveCurrentReminder()
-
-        //Then
-
-        assertThat(saveResult,CoreMatchers.nullValue())
-    }
+//    @Test
+//    fun dbErrorSaveCurrentReminderNullSaveResult() = runBlockingTest{
+//        //Given
+//        saveReminderViewModel.reminderTitle.value = "testTitle"
+//        saveReminderViewModel.reminderDescription.value = "testDescription"
+//        saveReminderViewModel.reminderSelectedLocationStr.value = "testLocation"
+//        saveReminderViewModel.latitude.value = 1.0
+//        saveReminderViewModel.longitude.value = 1.0
+//
+//        fakeDatasource.setReturnError(true)
+//
+//        //When
+//
+//        val saveResult = saveReminderViewModel.SaveCurrentReminder()
+//
+//        //Then
+//
+//        assertThat(saveResult,CoreMatchers.nullValue())
+//    }
 
     @Test
     fun onClearTestAllValuesNull(){

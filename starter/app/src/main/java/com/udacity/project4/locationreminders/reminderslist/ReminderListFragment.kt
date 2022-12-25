@@ -27,6 +27,7 @@ import com.udacity.project4.databinding.FragmentRemindersBinding
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import com.udacity.project4.utils.setTitle
 import com.udacity.project4.utils.setup
+import org.jetbrains.annotations.TestOnly
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ReminderListFragment : BaseFragment() {
@@ -145,7 +146,8 @@ class ReminderListFragment : BaseFragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    private fun checkPermissionsAndStartGeofencing() {
+    @TestOnly
+    fun checkPermissionsAndStartGeofencing() {
         if (isPermissionGranted()) {
             checkDeviceLocationSettingsAndStartGeofence()
         } else {
