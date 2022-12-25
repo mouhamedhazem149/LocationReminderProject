@@ -7,6 +7,7 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.*
@@ -88,6 +89,41 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         verify(navController).navigate(
             ReminderListFragmentDirections.toSaveReminder()
         )
+    }
+    @Test
+    fun clickReminder_navigateToReminderDescription(){
+        // GIVEN - On the home screen
+        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0)
+        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0)
+        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0)
+
+        val toSaveReminders = listOf(reminder1, reminder2, reminder3)
+
+        runBlockingTest {
+            for (reminder in toSaveReminders) {
+                dataSource.saveReminder(reminder)
+            }
+        }
+        launchFragmentInContainer<ReminderListFragment>(Bundle(), R.style.AppTheme)
+
+        onView(withId(R.id.reminderssRecyclerView)).check(ViewAssertions.matches(isDisplayed()))
+        for (reminder in toSaveReminders) {
+
+            onView(withText(reminder.title)).check(ViewAssertions.matches(isDisplayed()))
+            onView(withText(reminder.description)).check(ViewAssertions.matches(isDisplayed()))
+            onView(withText(reminder.location))
+                .check(ViewAssertions.matches(isDisplayed()))
+                // WHEN - Click on the reminder
+                .perform(click())
+
+            // THEN - Verify that we are in the reminder Description Layout
+            onView(withId(R.id.remidnerDescription_layout)).check(ViewAssertions.matches(isDisplayed()))
+
+            onView(withId(R.id.reminder_title_view)).check(ViewAssertions.matches(withText(reminder.title)))
+            onView(withId(R.id.reminder_description_view)).check(ViewAssertions.matches(withText(reminder.description)))
+
+            pressBack()
+        }
     }
 
     //    TODO: test the displayed data on the UI.

@@ -12,6 +12,7 @@ import android.util.Log
 import android.view.*
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
 import com.firebase.ui.auth.AuthUI
 import com.firebase.ui.auth.BuildConfig
 import com.google.android.gms.common.api.ResolvableApiException
@@ -24,6 +25,7 @@ import com.udacity.project4.R
 import com.udacity.project4.base.BaseFragment
 import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.databinding.FragmentRemindersBinding
+import com.udacity.project4.locationreminders.ReminderDescriptionActivity
 import com.udacity.project4.utils.setDisplayHomeAsUpEnabled
 import com.udacity.project4.utils.setTitle
 import com.udacity.project4.utils.setup
@@ -68,6 +70,13 @@ class ReminderListFragment : BaseFragment() {
         binding.addReminderFAB.setOnClickListener {
             navigateToAddReminder()
         }
+
+        _viewModel.selectedReminder.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                val intent = ReminderDescriptionActivity.newIntent(requireContext(), it)
+                startActivity(intent)
+            }
+        })
     }
 
     override fun onResume() {
@@ -91,9 +100,9 @@ class ReminderListFragment : BaseFragment() {
     }
 
     private fun setupRecyclerView() {
-        val adapter = RemindersListAdapter {
+        val adapter = RemindersListAdapter { selectedReminder ->
+            _viewModel.selectedReminder.value = selectedReminder
         }
-
 //        setup the recycler view using the extension function
         binding.reminderssRecyclerView.setup(adapter)
     }
@@ -146,8 +155,7 @@ class ReminderListFragment : BaseFragment() {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
     }
 
-    @TestOnly
-    fun checkPermissionsAndStartGeofencing() {
+    private fun checkPermissionsAndStartGeofencing() {
         if (isPermissionGranted()) {
             checkDeviceLocationSettingsAndStartGeofence()
         } else {
