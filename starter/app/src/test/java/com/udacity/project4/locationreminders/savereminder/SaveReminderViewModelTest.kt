@@ -50,7 +50,8 @@ class SaveReminderViewModelTest {
 
         //When
 
-        val saveResult = saveReminderViewModel.SaveCurrentReminder()
+        saveReminderViewModel.SaveCurrentReminder()
+        val saveResult = saveReminderViewModel.savedReminder.value
 
         //Then
         lateinit var dbItem: ReminderDTO
@@ -85,11 +86,10 @@ class SaveReminderViewModelTest {
         saveReminderViewModel.longitude.value = 1.0
 
         //When
-
-        val saveResult = saveReminderViewModel.SaveCurrentReminder()
+        saveReminderViewModel.SaveCurrentReminder()
+        val saveResult = saveReminderViewModel.savedReminder.value
 
         //Then
-
         assertThat(saveResult, CoreMatchers.nullValue())
         assertThat(
             saveReminderViewModel.showSnackBarInt.value,
@@ -107,11 +107,10 @@ class SaveReminderViewModelTest {
         saveReminderViewModel.longitude.value = 1.0
 
         //When
-
-        val saveResult = saveReminderViewModel.SaveCurrentReminder()
+        saveReminderViewModel.SaveCurrentReminder()
+        val saveResult = saveReminderViewModel.savedReminder.value
 
         //Then
-
         assertThat(saveResult,CoreMatchers.nullValue())
         assertThat(
             saveReminderViewModel.showSnackBarInt.value,
@@ -119,25 +118,24 @@ class SaveReminderViewModelTest {
         )
     }
 
-//    @Test
-//    fun dbErrorSaveCurrentReminderNullSaveResult() = runBlockingTest{
-//        //Given
-//        saveReminderViewModel.reminderTitle.value = "testTitle"
-//        saveReminderViewModel.reminderDescription.value = "testDescription"
-//        saveReminderViewModel.reminderSelectedLocationStr.value = "testLocation"
-//        saveReminderViewModel.latitude.value = 1.0
-//        saveReminderViewModel.longitude.value = 1.0
-//
-//        fakeDatasource.setReturnError(true)
-//
-//        //When
-//
-//        val saveResult = saveReminderViewModel.SaveCurrentReminder()
-//
-//        //Then
-//
-//        assertThat(saveResult,CoreMatchers.nullValue())
-//    }
+    @Test
+    fun dbErrorSaveCurrentReminderNullSaveResult() = runBlockingTest{
+        //Given
+        saveReminderViewModel.reminderTitle.value = "testTitle"
+        saveReminderViewModel.reminderDescription.value = "testDescription"
+        saveReminderViewModel.reminderSelectedLocationStr.value = "testLocation"
+        saveReminderViewModel.latitude.value = 1.0
+        saveReminderViewModel.longitude.value = 1.0
+
+        fakeDatasource.setReturnError(true)
+
+        //When
+        saveReminderViewModel.SaveCurrentReminder()
+        val saveResult = saveReminderViewModel.savedReminder.value
+
+        //Then
+        assertThat(saveResult,CoreMatchers.nullValue())
+    }
 
     @Test
     fun onClearTestAllValuesNull(){

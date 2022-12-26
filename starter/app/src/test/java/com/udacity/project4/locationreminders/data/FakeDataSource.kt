@@ -27,7 +27,7 @@ class FakeDataSource(val reminders : MutableList<ReminderDTO> = mutableListOf())
 
     override suspend fun saveReminder(reminder: ReminderDTO) {
         if (shouldReturnError){
-            // implement Error ?
+            throw Exception("Failed to Save Reminder")
         } else {
             reminders.add(reminder)
         }

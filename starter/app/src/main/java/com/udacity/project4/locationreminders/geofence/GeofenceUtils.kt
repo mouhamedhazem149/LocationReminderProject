@@ -9,13 +9,8 @@ import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
 import com.google.android.gms.location.GeofencingRequest
-import com.udacity.project4.R
-import com.udacity.project4.locationreminders.data.local.RemindersLocalRepository
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.locationreminders.savereminder.SaveReminderFragment
-import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.settings.SettingsFragment
-import org.koin.android.ext.android.inject
 
 
 fun getGeofencePendingIntent(context: Context): PendingIntent {
@@ -25,11 +20,6 @@ fun getGeofencePendingIntent(context: Context): PendingIntent {
 }
 
 fun GeofencingClient.addGeofenceForReminder(currentGeofenceData: ReminderDataItem) {
-
-//    val radius = applicationContext.getSharedPreferences(
-//        applicationContext.getString(R.string.settings)
-//        ,Context.MODE_PRIVATE
-//    ).getFloat(applicationContext.getString(R.string.radius_settings),100f)
 
     val radius = SettingsFragment.getRadiusSettings(applicationContext)
 

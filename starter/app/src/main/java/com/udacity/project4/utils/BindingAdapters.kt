@@ -1,14 +1,11 @@
 package com.udacity.project4.utils
 
-import android.content.Context
-import android.content.SharedPreferences
 import android.view.View
 import androidx.databinding.BindingAdapter
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.MapView
-import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.CircleOptions
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MapStyleOptions
@@ -16,7 +13,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseRecyclerViewAdapter
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.locationreminders.savereminder.SaveReminderFragment
 import com.udacity.project4.settings.SettingsFragment
 
 object BindingAdapters {
@@ -80,6 +76,9 @@ object BindingAdapters {
                 CircleOptions()
                     .center(location)
                     .radius(radius.toDouble())
+                    .strokeWidth(2f)
+                    .strokeColor(R.color.primaryDarkColor)
+                    .fillColor(R.color.primaryLightColor)
             )
 
             it.setMapStyle(
