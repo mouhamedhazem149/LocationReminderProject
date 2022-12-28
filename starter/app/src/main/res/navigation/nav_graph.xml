@@ -12,9 +12,6 @@
         <action
             android:id="@+id/to_save_reminder"
             app:destination="@id/saveReminderFragment" />
-        <action
-            android:id="@+id/action_reminderListFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
     </fragment>
     <activity
         android:id="@+id/mainActivity"
@@ -30,17 +27,16 @@
         <action
             android:id="@+id/action_saveReminderFragment_to_selectLocationFragment"
             app:destination="@id/selectLocationFragment" />
-        <action
-            android:id="@+id/action_saveReminderFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
+        <argument
+            android:name="reminderItem"
+            app:argType="com.udacity.project4.locationreminders.reminderslist.ReminderDataItem"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
     <fragment
         android:id="@+id/selectLocationFragment"
         android:name="com.udacity.project4.locationreminders.savereminder.selectreminderlocation.SelectLocationFragment"
         android:label="Select Location" >
-        <action
-            android:id="@+id/action_selectLocationFragment_to_settingsFragment"
-            app:destination="@id/settingsFragment" />
     </fragment>
     <fragment
         android:id="@+id/settingsFragment"

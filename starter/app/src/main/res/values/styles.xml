@@ -14,6 +14,7 @@
        <item name="colorOnPrimary">@color/primaryTextColor</item>
         <item name="android:fontFamily">@font/cairo_semibold</item>
         <item name="fontFamily">@font/cairo_semibold</item>
+        <item name="buttonBarNegativeButtonStyle">@color/red</item>
     </style>
 
     <style name="lightStyle" parent="Theme.MaterialComponents.Light.DarkActionBar">
@@ -22,6 +23,7 @@
         <item name="colorOnPrimary">@color/secondaryTextColor</item>
         <item name="android:fontFamily">@font/cairo_semibold</item>
         <item name="fontFamily">@font/cairo_semibold</item>
+        <item name="buttonBarNegativeButtonStyle">@color/red</item>
     </style>
 
     <style name="buttonStyle" parent="Widget.MaterialComponents.Button">

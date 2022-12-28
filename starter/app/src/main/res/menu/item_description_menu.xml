@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/edit"
+        android:title="@string/edit_reminder"
+        android:icon="@drawable/edit"
+        app:showAsAction="ifRoom"/>
+    <item
+        android:id="@+id/delete"
+        android:title="@string/delete_reminder"
+        android:icon="@drawable/delete"
+        android:iconTint="#FF0000"
+        android:iconTintMode="src_atop"
+        android:menuCategory="system"
+        app:showAsAction="ifRoom"/>
+</menu>

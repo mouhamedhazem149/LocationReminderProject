@@ -59,17 +59,17 @@ class RemindersListViewModelTest {
         remindersListViewModel.loadReminders()
 
         //Then showNoData should be true
-        assertThat(remindersListViewModel.showSnackBar.value, `is`("Exception Thrown"))
+        assertThat(remindersListViewModel.showSnackBar.value, `is`("Test exception"))
         assertThat(remindersListViewModel.showNoData.value, `is`(true))
     }
 
     @Test
     fun saveRemindersLoadRemindersShowNoDataFalse() = runBlockingTest {
         // Given Data
-        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0)
-        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0)
-        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0)
-        val reminder4 = ReminderDTO("title4", "description4", "location4", 1.0, 1.0)
+        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0,100.0)
+        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0,100.0)
+        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0,100.0)
+        val reminder4 = ReminderDTO("title4", "description4", "location4", 1.0, 1.0,100.0)
 
         val toSaveReminders = listOf(reminder1, reminder2, reminder3, reminder4)
 

@@ -4,11 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <data>
-        <!--Data item that holds the reminder details-->
         <variable
-            name="reminderDataItem"
-            type="com.udacity.project4.locationreminders.reminderslist.ReminderDataItem" />
+            name="viewModel"
+            type="com.udacity.project4.locationreminders.remindersdescription.RemindersDescriptionViewModel" />
     </data>
+<!--    <data>-->
+<!--        &lt;!&ndash;Data item that holds the reminder details&ndash;&gt;-->
+<!--        <variable-->
+<!--            name="reminderDataItem"-->
+<!--            type="com.udacity.project4.locationreminders.reminderslist.ReminderDataItem" />-->
+<!--    </data>-->
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/remidnerDescription_layout"
@@ -16,7 +21,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:orientation="vertical"
-        tools:context=".locationreminders.ReminderDescriptionActivity">
+        tools:context=".locationreminders.remindersdescription.ReminderDescriptionActivity">
         <!--TODO: add the design of the reminder details-->
 
         <TextView
@@ -27,7 +32,8 @@
             android:text="@string/reminder_title"
             app:layout_constraintBaseline_toBaselineOf="@+id/reminder_title_view"
             style="@style/labelStyle"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginLeft="@dimen/margin_normal" />
 
         <TextView
             android:id="@+id/reminder_title_view"
@@ -37,11 +43,12 @@
             android:layout_marginTop="@dimen/margin_normal"
             android:layout_marginEnd="@dimen/margin_normal"
             android:gravity="center"
-            android:text="@{reminderDataItem.title}"
+            android:text="@{viewModel.currentReminder.title}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/title_label_view"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginRight="@dimen/margin_normal"/>
 
         <TextView
             android:id="@+id/description_label_view"
@@ -51,7 +58,8 @@
             android:text="@string/reminder_desc"
             app:layout_constraintBaseline_toBaselineOf="@+id/reminder_description_view"
             app:layout_constraintStart_toStartOf="parent"
-            style="@style/labelStyle"/>
+            style="@style/labelStyle"
+            android:layout_marginLeft="@dimen/margin_normal" />
 
         <TextView
             android:id="@+id/reminder_description_view"
@@ -60,11 +68,12 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/margin_normal"
             android:layout_marginEnd="@dimen/margin_normal"
-            android:text="@{reminderDataItem.description}"
+            android:text="@{viewModel.currentReminder.description}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="1.0"
             app:layout_constraintStart_toEndOf="@+id/description_label_view"
-            app:layout_constraintTop_toBottomOf="@id/reminder_title_view" />
+            app:layout_constraintTop_toBottomOf="@id/reminder_title_view"
+            android:layout_marginRight="@dimen/margin_normal"/>
 
         <com.google.android.gms.maps.MapView
             android:id="@+id/mapView"
@@ -75,7 +84,7 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/reminder_description_view"
-            marker="@{reminderDataItem}"/>
+            marker="@{viewModel.currentReminder}"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

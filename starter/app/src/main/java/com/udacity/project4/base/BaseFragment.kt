@@ -5,6 +5,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import com.udacity.project4.utils.handleNavigation
 
 /**
  * Base Fragment to observe on the common LiveData objects
@@ -31,14 +32,7 @@ abstract class BaseFragment : Fragment() {
         })
 
         _viewModel.navigationCommand.observe(this, Observer { command ->
-            when (command) {
-                is NavigationCommand.To -> findNavController().navigate(command.directions)
-                is NavigationCommand.Back -> findNavController().popBackStack()
-                is NavigationCommand.BackTo -> findNavController().popBackStack(
-                    command.destinationId,
-                    false
-                )
-            }
+            findNavController().handleNavigation(command)
         })
     }
 }

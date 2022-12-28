@@ -23,7 +23,7 @@ import com.google.firebase.auth.FirebaseUser
 enum class AuthenticationState {
     AUTHENTICATED, UNAUTHENTICATED
 }
-
+// livedata to listen to changes in auth state
 class UserLiveData : LiveData<AuthenticationState>() {
 
     private val firebaseAuth = FirebaseAuth.getInstance()

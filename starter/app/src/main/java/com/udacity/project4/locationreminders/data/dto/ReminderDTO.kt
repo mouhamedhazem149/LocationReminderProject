@@ -14,6 +14,7 @@ import java.util.*
  * @param location      location name of the reminder
  * @param latitude      latitude of the reminder location
  * @param longitude     longitude of the reminder location
+ * @param radius radius of geofence circle
  * @param id          id of the reminder
  */
 
@@ -24,6 +25,7 @@ data class ReminderDTO(
     @ColumnInfo(name = "location") var location: String?,
     @ColumnInfo(name = "latitude") var latitude: Double?,
     @ColumnInfo(name = "longitude") var longitude: Double?,
+    @ColumnInfo(name = "radius") var radius: Double?,
     @PrimaryKey @ColumnInfo(name = "entry_id") val id: String = UUID.randomUUID().toString()
 )
 
@@ -33,5 +35,6 @@ fun ReminderDTO.AsReminderDataItem() : ReminderDataItem {
         location,
         latitude,
         longitude,
+        radius,
         id)
 }

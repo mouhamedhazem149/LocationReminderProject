@@ -1,6 +1,8 @@
 package com.udacity.project4.locationreminders.savereminder
 
 import android.app.Application
+import android.util.Log
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationServices
@@ -11,80 +13,91 @@ import com.udacity.project4.base.NavigationCommand
 import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
 import com.udacity.project4.locationreminders.geofence.addGeofenceForReminder
+import com.udacity.project4.locationreminders.geofence.removeGeofenceForReminderIds
+import com.udacity.project4.locationreminders.reminderslist.AsReminderDTO
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
+import com.udacity.project4.settings.SettingsFragment.Companion.getRadiusSettings
 import kotlinx.coroutines.launch
 
 class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSource) :
     BaseViewModel(app) {
-    val reminderTitle = MutableLiveData<String?>()
-    val reminderDescription = MutableLiveData<String?>()
-    val reminderSelectedLocationStr = MutableLiveData<String?>()
-    val selectedPOI = MutableLiveData<PointOfInterest?>()
-    val latitude = MutableLiveData<Double?>()
-    val longitude = MutableLiveData<Double?>()
 
-    val savedReminder = MutableLiveData<ReminderDataItem?>(null)
+    // serves as a private store for the reminder model being added / edited
+    private val _currentReminder = MutableLiveData<ReminderDataItem>(
+        ReminderDataItem(
+            null,
+            null,
+            null,
+            null,
+            null,
+            null
+        )
+    )
+
+    /**
+     * public getter
+     */
+    val currentReminder: LiveData<ReminderDataItem?>
+        get() = _currentReminder
+
+    /**
+     * function used to set reminder without being public exposed, to conform to encapsulation principle
+     */
+    fun updateCurrentReminder(reminderItem: ReminderDataItem) {
+        _currentReminder.value = reminderItem
+    }
 
     /**
      * Clear the live data objects to start fresh next time the view model gets called
      */
     fun onClear() {
-        reminderTitle.value = null
-        reminderDescription.value = null
-        reminderSelectedLocationStr.value = null
-        selectedPOI.value = null
-        latitude.value = null
-        longitude.value = null
+        // set new null reminder item with new id that is auto generated
+        updateCurrentReminder(
+            ReminderDataItem(
+                null,
+                null,
+                null,
+                null,
+                null,
+                null
+            )
+        )
     }
 
     /**
-     * Validate the entered data then saves the reminder data to the DataSource and return it if succeeded
+     * set radius from settings, then request save of current reminder
      */
-
     fun SaveCurrentReminder() {
+        val radius = getRadiusSettings(app)
 
-        val reminderItem = ReminderDataItem(
-            reminderTitle.value,
-            reminderDescription.value,
-            reminderSelectedLocationStr.value,
-            latitude.value,
-            longitude.value
-        )
-
-        if (validateEnteredData(reminderItem)) {
-            saveReminder(reminderItem)
-        } else{
-            savedReminder.value = null
+        currentReminder.value?.let {
+            it.radius = radius.toDouble()
+            validateAndSaveReminder(it)
         }
     }
 
     /**
      * Validate the entered data then saves the reminder data to the DataSource
      */
-//    fun validateAndSaveReminder(reminderData: ReminderDataItem) {
-//        if (validateEnteredData(reminderData)) {
-//            saveReminder(reminderData)
-//        }
-//    }
+    fun validateAndSaveReminder(reminderData: ReminderDataItem) {
+        if (validateEnteredData(reminderData)) {
+            saveReminder(reminderData)
+        }
+    }
 
     /**
-     * Save the reminder to the data source
+     * Save the reminder to the data source and remove old geofence if there's any
+     * (like if it's edit not delete) with same id and add the new geofence request
+     * if already added, will be updated
      */
     fun saveReminder(reminderData: ReminderDataItem) {
         showLoading.value = true
-
         viewModelScope.launch {
             try {
                 dataSource.saveReminder(
-                    ReminderDTO(
-                        reminderData.title,
-                        reminderData.description,
-                        reminderData.location,
-                        reminderData.latitude,
-                        reminderData.longitude,
-                        reminderData.id
-                    )
+                    reminderData.AsReminderDTO()
                 )
+
                 showLoading.value = false
                 showToast.value = app.getString(R.string.reminder_saved)
                 navigationCommand.value = NavigationCommand.Back
@@ -93,9 +106,8 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
                     .getGeofencingClient(app)
                     .addGeofenceForReminder(reminderData)
 
-                savedReminder.postValue(reminderData)
             } catch (ex: Exception) {
-                savedReminder.postValue(null)
+
             }
         }
     }
@@ -107,6 +119,11 @@ class SaveReminderViewModel(val app: Application, val dataSource: ReminderDataSo
 
         if (reminderData.title.isNullOrEmpty()) {
             showSnackBarInt.value = R.string.err_enter_title
+            return false
+        }
+
+        if (reminderData.description.isNullOrEmpty()) {
+            showSnackBarInt.value = R.string.err_enter_description
             return false
         }
 

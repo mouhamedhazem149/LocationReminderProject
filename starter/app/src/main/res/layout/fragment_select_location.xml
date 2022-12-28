@@ -15,28 +15,6 @@
         android:layout_height="match_parent">
         <!--TODO: Add the map fragment for the user to select the location-->
 
-<!--        <com.google.android.gms.maps.MapView-->
-<!--            android:id="@+id/location_view"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_margin="@dimen/margin_normal"-->
-<!--            app:layout_constraintBottom_toTopOf="@+id/save_button"-->
-<!--            app:layout_constraintEnd_toEndOf="parent"-->
-<!--            app:layout_constraintStart_toStartOf="parent"-->
-<!--            app:layout_constraintTop_toTopOf="parent" />-->
-
-        <!--                <TextView-->
-        <!--                    android:id="@+id/selectLocation_title"-->
-        <!--                    android:layout_width="match_parent"-->
-        <!--                    android:layout_height="wrap_content"-->
-        <!--                    android:layout_margin="@dimen/margin_normal"-->
-        <!--                    android:text="@string/select_poi"-->
-        <!--                    android:theme="@style/subTitleHeadline"-->
-        <!--                    app:layout_constraintEnd_toEndOf="parent"-->
-        <!--                    app:layout_constraintHorizontal_bias="5.0"-->
-        <!--                    app:layout_constraintStart_toStartOf="parent"-->
-        <!--                    app:layout_constraintTop_toTopOf="parent" />-->
-
         <fragment
             android:id="@+id/map_view"
             android:name="com.google.android.gms.maps.SupportMapFragment"
@@ -48,7 +26,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"/>
 
-                <Button
+        <Button
                     android:id="@+id/save_location_buttton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -57,5 +35,5 @@
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </layout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

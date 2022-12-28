@@ -13,11 +13,11 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.udacity.project4.FakeDataSource
 import com.udacity.project4.R
+import com.udacity.project4.locationreminders.data.FakeDataSource
+import com.udacity.project4.locationreminders.data.ReminderDataSource
 import com.udacity.project4.locationreminders.data.dto.ReminderDTO
-import com.udacity.project4.locationreminders.data.local.LocalDB
-import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
+import com.udacity.project4.locationreminders.remindersdescription.RemindersDescriptionViewModel
 import kotlinx.android.synthetic.main.fragment_reminders.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -51,6 +51,12 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         val myModule = module {
             viewModel {
                 RemindersListViewModel(
+                    appContext,
+                    get() as FakeDataSource
+                )
+            }
+            viewModel {
+                RemindersDescriptionViewModel(
                     appContext,
                     get() as FakeDataSource
                 )
@@ -90,12 +96,13 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             ReminderListFragmentDirections.toSaveReminder()
         )
     }
+
     @Test
     fun clickReminder_navigateToReminderDescription(){
         // GIVEN - On the home screen
-        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0)
-        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0)
-        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0)
+        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0,100.0)
+        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0,100.0)
+        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0,100.0)
 
         val toSaveReminders = listOf(reminder1, reminder2, reminder3)
 
@@ -151,14 +158,15 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
             )
         )
     }
+
     @Test
     fun onSomeRemindersInReminderListFragment_HomeUiDataShowReminders() {
 
         // GIVEN - Reminderlistfragment with some reminders
-        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0)
-        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0)
-        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0)
-        val reminder4 = ReminderDTO("title4", "description4", "location4", 1.0, 1.0)
+        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0,100.0)
+        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0,100.0)
+        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0,100.0)
+        val reminder4 = ReminderDTO("title4", "description4", "location4", 1.0, 1.0,100.0)
 
         val toSaveReminders = listOf(reminder1, reminder2, reminder3, reminder4)
 
@@ -194,6 +202,6 @@ class ReminderListFragmentTest : AutoCloseKoinTest() {
         onView(withId(R.id.refreshLayout)).check(ViewAssertions.matches(isDisplayed()))
 
         // THEN - Verify reminders are loaded
-        onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText("Error Loading Reminders")))
+        onView(withId(R.id.snackbar_text)).check(ViewAssertions.matches(withText("Test exception")))
     }
 }

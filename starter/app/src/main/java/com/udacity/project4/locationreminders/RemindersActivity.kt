@@ -1,68 +1,37 @@
 package com.udacity.project4.locationreminders
 
 import android.content.Intent
-import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
-import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.udacity.project4.R
-import com.udacity.project4.authentication.AuthenticationActivity
-import com.udacity.project4.authentication.AuthenticationState
-import com.udacity.project4.authentication.UserLiveData
+import com.udacity.project4.base.AuthActivity
+import com.udacity.project4.base.NavigationCommand
+import com.udacity.project4.utils.handleNavigation
 import kotlinx.android.synthetic.main.activity_reminders.*
-import org.jetbrains.annotations.TestOnly
 
 /**
  * The RemindersActivity that holds the reminders fragments
  */
-class RemindersActivity : AppCompatActivity() {
+class RemindersActivity : AuthActivity() {
 
-    private var isInitialized = false
+    override val layoutResId: Int
+        get() = R.layout.activity_reminders
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        UserLiveData().observe(this, Observer {
-            checkAuth(it)
-        })
-    }
-
-    @TestOnly
-    private fun checkAuth(authState : AuthenticationState?) : Boolean {
-        // if not authenticated then launch authentication activity
-
-        if (authState != AuthenticationState.AUTHENTICATED) {
-            startActivity(
-                Intent(
-                    this,
-                    AuthenticationActivity::class.java
-                )
-            )
-
-            // used to prevent kind of bleeding of the activity bfr launching the
-            // new one and to prevent navigating back to this activity
-            finish()
-            return false
-        } else {
-            // else if authed then continue launching reminders activity
-            if (!isInitialized) {
-                setContentView(R.layout.activity_reminders)
-                isInitialized = true
-            }
-            return true
-        }
-    }
+    override val callBackIntent: Intent
+        get() = intent ?: Intent(this, RemindersActivity::class.java)
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        menuInflater.inflate(R.menu.settings_menu,menu)
+        menuInflater.inflate(R.menu.settings_menu, menu)
         return super.onCreateOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
             R.id.settings -> {
+                // navigate to settings screen,
+                // menu inflated here to be available across all fragments in the activity
                 (nav_host_fragment as NavHostFragment).navController.navigate(R.id.settingsFragment)
             }
             android.R.id.home -> {
@@ -73,4 +42,15 @@ class RemindersActivity : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
+    // check if there was intent used to call the activity that was interrupted because
+    // of authentication and relaunch it
+    override fun onAuthenticated() {
+        intent?.let {
+            val navCommand =
+                intent.getSerializableExtra(getString(R.string.reminder_navCommand)) as NavigationCommand?
+            navCommand?.let {
+                nav_host_fragment.findNavController().handleNavigation(navCommand)
+            }
+        }
+    }
 }

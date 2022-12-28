@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.Geofence
 import com.google.android.gms.location.GeofencingClient
@@ -12,6 +13,7 @@ import com.google.android.gms.location.GeofencingRequest
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
 import com.udacity.project4.settings.SettingsFragment
 
+const val TAG = "GEOFENCES"
 
 fun getGeofencePendingIntent(context: Context): PendingIntent {
     val intent = Intent(context, GeofenceBroadcastReceiver::class.java)
@@ -19,34 +21,62 @@ fun getGeofencePendingIntent(context: Context): PendingIntent {
     return PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT)
 }
 
-fun GeofencingClient.addGeofenceForReminder(currentGeofenceData: ReminderDataItem) {
+fun GeofencingClient.addGeofenceForReminder(vararg reminderItems: ReminderDataItem) {
 
-    val radius = SettingsFragment.getRadiusSettings(applicationContext)
+    for (currentGeofenceData in reminderItems) {
+        val geofence = Geofence.Builder()
+            .setRequestId(currentGeofenceData.id)
+            .setCircularRegion(
+                currentGeofenceData.latitude!!,
+                currentGeofenceData.longitude!!,
+                currentGeofenceData.radius!!.toFloat()
+            )
+            .setExpirationDuration(Geofence.NEVER_EXPIRE)
+            .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
+            .build()
 
-    val geofence = Geofence.Builder()
-        .setRequestId(currentGeofenceData.id)
-        .setCircularRegion(
-            currentGeofenceData.latitude!!,
-            currentGeofenceData.longitude!!,
-            radius.toFloat()
-        )
-        .setExpirationDuration(Geofence.NEVER_EXPIRE)
-        .setTransitionTypes(Geofence.GEOFENCE_TRANSITION_ENTER)
-        .build()
+        val geofencingRequest = GeofencingRequest.Builder()
+            .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
+            .addGeofence(geofence)
+            .build()
 
-    val geofencingRequest = GeofencingRequest.Builder()
-        .setInitialTrigger(GeofencingRequest.INITIAL_TRIGGER_ENTER)
-        .addGeofence(geofence)
-        .build()
+        if (ActivityCompat.checkSelfPermission(
+                applicationContext,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
+            addGeofences(
+                geofencingRequest,
+                getGeofencePendingIntent(applicationContext)
+            )
+        }
+    }
+}
+
+fun GeofencingClient.removeGeofenceForReminderIds(vararg geofenceRequestIds : String) {
 
     if (ActivityCompat.checkSelfPermission(
             applicationContext,
             Manifest.permission.ACCESS_FINE_LOCATION
         ) == PackageManager.PERMISSION_GRANTED
     ) {
-        addGeofences(
-            geofencingRequest,
-            getGeofencePendingIntent(applicationContext)
-        )
+        if (geofenceRequestIds.isNotEmpty()) {
+            removeGeofences(geofenceRequestIds.toList())
+                .addOnSuccessListener {
+                    Log.i(TAG, "success delete")
+                }
+                .addOnFailureListener {
+                    Log.i(TAG, "failure delete")
+                }
+        } else {
+
+            removeGeofences(getGeofencePendingIntent(applicationContext))
+                .addOnSuccessListener {
+                    Log.i(TAG, "success delete")
+                }
+                .addOnFailureListener {
+                    Log.i(TAG, "failure delete")
+                }
+        }
     }
 }

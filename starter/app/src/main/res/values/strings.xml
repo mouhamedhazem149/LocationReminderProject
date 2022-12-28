@@ -50,9 +50,28 @@
     <string name="save_string">Save</string>
     <string name="select_poi_succeed">Point of interest: %s selected</string>
     <string name="radius_settings">radius_settings</string>
+    <string name="signout_settings">signout_settings</string>
     <string name="radius_settings_format">Radius for newly created geofences</string>
     <string name="radius_settings_title">Geofencing radius</string>
+    <string name="signout_settings_title">Signout Settings</string>
     <string name="agree">Agree</string>
     <string name="privacypolicy_str">Privacy Policy</string>
+    <string name="err_enter_description">Please, enter description</string>
+
+    <string name="deleteAll_settings_option">Delete Everything</string>
+    <string name="keepReminders_settings_option">Delete Geofences,but keep reminders data</string>
+    <string name="keepAll_settings_option">Keep Everything</string>
+
+    <string name="authIntent_package_Key">AuthIntent_package_Key</string>
+    <string name="reminder_deleted">Reminder Deleted !</string>
+
+    <string name="delete_reminder">Delete</string>
+    <string name="confirm_delete">Confirm</string>
+    <string name="confirm">Are you sure you want to delete the reminder ?</string>
+    <string name="edit_reminder">Edit</string>
+    <string name="current_reminder_key">CurrentReminder_Key</string>
+    <string name="reminder_navCommand">RemindersActivity_NavCommands</string>
+    <string name="retry_string">Retry</string>
+    <string name="sign_in_failue">There was a problem during sign in, please check your connection and try again later.</string>
 
 </resources>

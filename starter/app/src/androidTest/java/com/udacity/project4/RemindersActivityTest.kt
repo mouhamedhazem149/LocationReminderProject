@@ -2,6 +2,7 @@ package com.udacity.project4
 
 import android.app.Application
 import android.util.Log
+import android.view.View
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider.getApplicationContext
 import androidx.test.espresso.Espresso.onView
@@ -11,6 +12,7 @@ import androidx.test.espresso.action.ViewActions.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.RootMatchers.withDecorView
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.LargeTest
@@ -23,8 +25,10 @@ import com.udacity.project4.locationreminders.reminderslist.RemindersListViewMod
 import com.udacity.project4.locationreminders.savereminder.SaveReminderViewModel
 import com.udacity.project4.util.DataBindingIdlingResource
 import com.udacity.project4.util.monitorActivity
+import com.udacity.project4.utils.EspressoIdlingResource
 import kotlinx.android.synthetic.main.activity_reminders.*
 import kotlinx.coroutines.runBlocking
+import org.hamcrest.CoreMatchers.not
 import org.junit.After
 import org.junit.Before
 import org.junit.Test
@@ -50,11 +54,13 @@ class RemindersActivityTest :
     @Before
     fun registerIdlingResource() {
         IdlingRegistry.getInstance().register(dataBindingIdlingResource)
+        IdlingRegistry.getInstance().register(EspressoIdlingResource.countingIdlingResource)
     }
 
     @After
     fun unregisterIdlingResource() {
         IdlingRegistry.getInstance().unregister(dataBindingIdlingResource)
+        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.countingIdlingResource)
     }
 
     /**
@@ -99,6 +105,8 @@ class RemindersActivityTest :
     fun saveOneReminder() {
         // start up Tasks screen
         val activityScenario = ActivityScenario.launch(RemindersActivity::class.java)
+        var decorView: View? = null
+        activityScenario.onActivity { decorView = it.window.decorView }
 
         val toAddTitle = "testTitle"
         val toAddDescription = "testDescription"
@@ -126,6 +134,11 @@ class RemindersActivityTest :
         onView(withId(R.id.savereminder_layout)).check(matches(isDisplayed()))
         onView(withId(R.id.saveReminder)).perform(ViewActions.click())
 
+        // check toast
+        onView(withText(appContext.getString(R.string.reminder_saved)))
+            .inRoot(withDecorView(not(decorView)))
+            .check(matches(isDisplayed()))
+
         // check if it's added to list
         onView(withId(R.id.refreshLayout)).check(matches(isDisplayed()))
         onView(withId(R.id.item_title)).check(matches(withText(toAddTitle)))
@@ -133,5 +146,4 @@ class RemindersActivityTest :
 
         activityScenario.close()
     }
-
 }

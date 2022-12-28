@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <SeekBarPreference
+    <PreferenceCategory android:title="App Settings">
+        <SeekBarPreference
         android:key="@string/radius_settings"
         android:title="@string/radius_settings_title"
         android:defaultValue="100"
@@ -11,5 +12,16 @@
         app:useSimpleSummaryProvider="true"
         android:summary="@string/radius_settings_format"
         app:showSeekBarValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="Data Settings">
+        <ListPreference
+            android:key="@string/signout_settings"
+            android:title="@string/signout_settings_title"
+            app:entries="@array/logout_data_options"
+            app:entryValues="@array/logout_data_options"
+            app:defaultValue="@string/keepAll_settings_option"
+            app:useSimpleSummaryProvider="true"/>
+    </PreferenceCategory>
 
 </PreferenceScreen>

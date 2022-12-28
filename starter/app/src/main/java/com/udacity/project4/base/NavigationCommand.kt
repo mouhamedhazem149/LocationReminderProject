@@ -1,15 +1,21 @@
 package com.udacity.project4.base
 
+import android.os.Bundle
 import androidx.navigation.NavDirections
 
 /**
  * Sealed class used with the live data to navigate between the fragments
  */
-sealed class NavigationCommand {
+sealed class NavigationCommand : java.io.Serializable {
     /**
      * navigate to a direction
      */
     data class To(val directions: NavDirections) : NavigationCommand()
+
+    /**
+     * navigate to fragment with args
+     */
+    data class ToFragment(val fragId : Int,val argsKey : String,val argsBundle : java.io.Serializable) : NavigationCommand()
 
     /**
      * navigate back to the previous fragment

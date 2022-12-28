@@ -13,7 +13,6 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.udacity.project4.R
 import com.udacity.project4.base.BaseRecyclerViewAdapter
 import com.udacity.project4.locationreminders.reminderslist.ReminderDataItem
-import com.udacity.project4.settings.SettingsFragment
 
 object BindingAdapters {
 
@@ -53,9 +52,13 @@ object BindingAdapters {
         }
     }
 
+    // a binding adapter used for description activity for udate the map according to
+    // reminder data and set markers and so on
     @BindingAdapter("marker")
     @JvmStatic
-    fun MapView.marker(reminderItem: ReminderDataItem) {
+    fun MapView.marker(reminderItem: ReminderDataItem?) {
+        if (reminderItem == null)
+            return
 
         onCreate(null)
         getMapAsync {
@@ -70,12 +73,10 @@ object BindingAdapters {
                     .position(location)
             )
 
-            val radius = SettingsFragment.getRadiusSettings(context)
-
             it.addCircle(
                 CircleOptions()
                     .center(location)
-                    .radius(radius.toDouble())
+                    .radius(reminderItem.radius!!.toDouble())
                     .strokeWidth(2f)
                     .strokeColor(R.color.primaryDarkColor)
                     .fillColor(R.color.primaryLightColor)
