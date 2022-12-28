@@ -2,11 +2,11 @@
 
 A Todo list app with location reminders that remind the user to do something when he reaches a specific location. The app will require the user to create an account and login to set and access reminders.
 
-[Login Page](screenshots\Screenshot_Login.png)
+[Login Page](./screenshots/Screenshot_Login.png)
 
-[Reminders list Page](screenshots\Screenshot_RemindersList.png)
+[Reminders list Page](./screenshots/Screenshot_RemindersList.png)
 
-[Reminder description Page](screenshots\Screenshot_ReminderDisplay.png)
+[Reminder description Page](./screenshots/Screenshot_ReminderDisplay.png)
 
 ## Built With
 
