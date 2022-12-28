@@ -68,6 +68,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/email_login"
-        android:theme="@style/lightStyle"/>
+        android:theme="@style/Theme.AppCompat.Light"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

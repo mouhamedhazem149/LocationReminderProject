@@ -146,4 +146,48 @@ class RemindersLocalRepositoryTest {
 
         assertThat(reminders.data.count(), `is`(0))
     }
+
+    @Test
+    fun saveRemindersAndDeleteReminder() = runBlocking {
+
+        // Given
+        val reminder1 = ReminderDTO("title1", "description1", "location1", 1.0, 1.0, 100.0)
+        val reminder2 = ReminderDTO("title2", "description2", "location2", 1.0, 1.0, 100.0)
+        val reminder3 = ReminderDTO("title3", "description3", "location3", 1.0, 1.0, 100.0)
+        val reminder4 = ReminderDTO("title4", "description4", "location4", 1.0, 1.0, 100.0)
+
+        val toSaveReminders = listOf(reminder1, reminder2, reminder3, reminder4)
+        val toDeleteReminder = reminder1
+
+        for (reminder in toSaveReminders) {
+            localRepository.saveReminder(reminder)
+        }
+
+        // When
+        localRepository.deleteReminder(toDeleteReminder.id)
+        // THEN
+
+        for (reminder in toSaveReminders) {
+            var savedReminder: Result<ReminderDTO>? = null
+
+            savedReminder = localRepository.getReminder(reminder.id)
+
+            if (reminder == toDeleteReminder) {
+                assertThat(savedReminder as Result.Error, `is`(Result.Error("Reminder not found!")))
+
+            } else {
+                assertThat(savedReminder as Result.Success, notNullValue())
+
+                (savedReminder as Result.Success).data.let {
+                    assertThat(it.id, `is`(reminder.id))
+                    assertThat(it.title, `is`(reminder.title))
+                    assertThat(it.description, `is`(reminder.description))
+                    assertThat(it.location, `is`(reminder.location))
+                    assertThat(it.latitude, `is`(reminder.latitude))
+                    assertThat(it.longitude, `is`(reminder.longitude))
+                    assertThat(it.radius, `is`(reminder.radius))
+                }
+            }
+        }
+    }
 }
